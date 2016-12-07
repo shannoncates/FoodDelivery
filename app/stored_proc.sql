@@ -3,7 +3,7 @@
 -- Create the User table
 
 create table "User"
-{
+(
 	email text primary key,
 	first_name text,
 	middle_initial text,
@@ -14,53 +14,51 @@ create table "User"
 	is_authenticated boolean default True,
 	is_active boolean default True,
 	is_anonymous boolean default True
-};
+);
 
 
 -- Create the Catering table
 
 create table "Catering"
-{
+(
 	catering_id int primary key,
 	catering_name text,
 	catering_info text,
 	is_active boolean default True
-};
+);
 
+-- Create the Location table
+
+create table "Location"
+(
+	location_id int primary key,
+	location_name text,
+	is_active boolean default True
+);
 
 -- Create the Restaurant table
 
 create table "Restaurant"
-{
+(
 	restaurant_id int primary key,
 	location_id int references "Location",
 	restaurant_name text,
 	restaurant_info text,
 	is_active boolean default True
-};
-
-
--- Create the Location table
-
-create table "Location"
-{
-	location_id int primary key,
-	location_name text,
-	is_active boolean default True
-};
+);
 
 
 -- Create the Food table
 
 create table "Food"
-{
+(
 	food_id int primary key,
 	restaurant_id int references "Restaurant",
 	food_name text,
 	food_info text,
 	food_price text,
 	is_active boolean default True
-};
+);
 
 -- ##### TABLES END HERE ##### --
 
