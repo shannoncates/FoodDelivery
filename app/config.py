@@ -4,7 +4,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 SQLALCHEMY_TRACK_MODIFICATIONS = True
-SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://postgres:monkeyka@localhost/foodonwheels"
+SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://postgres:cheche002@localhost/FoodDelivery"
 SQLALCHEMY_MIGRATION_REPO = os.path.join(basedir, 'db_repository')
 
 
