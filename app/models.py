@@ -45,7 +45,7 @@ class DBconn:
 	""" Database Connection """
 
 	def __init__(self):
-		engine = create_engine("postgresql+psycopg2://postgres:monkeyka@localhost/foodonwheels", echo=False)
+		engine = create_engine("postgresql+psycopg2://postgres:cheche002@localhost/FoodDelivery", echo=False)
 		self.conn = engine.connect()
 		self.trans = self.conn.begin()
 
