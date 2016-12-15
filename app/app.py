@@ -109,6 +109,84 @@ def search():
 		return jsonify({'status': 'ok', 'entries': recs, 'count': len(recs)})
 
 #######################################################
+
+
+############# LOCATION ################################
+@app.route('/api/location', methods=['GET'])
+def get_locations():
+
+	res = spcall('list_locations', ())
+	if 'Error' in str(res[0][0]):
+		return jsonify({'status': 'error', 'message': res[0][0]})
+
+	recs = []
+	for r in res:
+		recs.append({'location_id': r[0], 'location_name': r[1]})
+	return jsonify({'status': 'ok', 'entries': recs, 'count': len(recs)})
+
+
+@app.route('/api/location/<int:locationid>', methods=['GET'])
+def get_certain_location(locationid):
+
+	res = spcall('get_location', str(locationid))
+	if 'Error' in str(res[0][0]):
+		return jsonify({'status': 'error', 'message': "location id does not exist"})
+
+	for r in res:
+		recs = {'location_id': str(r[0]), 'location_name': r[1]}
+	return jsonify({'status': 'ok', 'entry': recs})
+
+#############################################################################
+
+
+############# RESTAURANT ##############################
+@app.route('/api/restaurant/location/<int:location_id>', methods=['GET'])
+def get_restaurant_location(location_id):
+
+	location_list = spcall('list_locations', ())
+	matched_restaurant = spcall('get_restaurant_by_location', [str(location_id)])
+
+	if ((location_id > len(location_list)) or (location_id < 1) or (len(matched_restaurant)==0)):
+		return jsonify({'status': 'error', 'message': 'no match found'})
+
+	else:
+		recs = []
+		for i in matched_restaurant:
+
+			recs.append({'restaurant_id': str(i[0]),
+					'location_id': str(i[1]),
+					'restaurant_name': i[2],
+					'restaurant_info': i[3]})
+
+		return jsonify({'status': 'successful', 'match': recs})
+
+#######################################################
+
+
+############# FOOD #####################################
+@app.route('/api/food/restaurant/<int:restaurant_id>', methods=['GET'])
+def get_food_restaurant(restaurant_id):
+
+
+	restaurant_list = spcall('list_restaurants', ())
+	matched_food = spcall('get_food_by_restaurant', [str(restaurant_id)])
+
+	if ((restaurant_id > len(restaurant_list)) or (restaurant_id < 1) or (len(matched_food)==0)):
+		return jsonify({'status': 'error', 'message': 'no match found'})
+
+	else:
+		recs = []
+		for i in matched_food:
+
+			recs.append({'food_id': str(i[0]),
+					'restaurant_id': str(i[1]),
+					'food_name': i[2],
+					'food_info': i[3],
+					'food_price': i[4]})
+
+		return jsonify({'status': 'successful', 'match': recs})
+
+######################################################################
 	
 if __name__ == "__main__":
     app.run(debug=True, port=5005)
