@@ -84,3 +84,84 @@ def And_it_will_return_these_messages(step):
 	assert_equals(step.hashes, [json.loads(world.response.data)])
 
 ######################################################################
+
+
+############################ SEARCH STARTS HERE ######################
+#Scenario: Search location with keyword Cebu
+@step(u'Given I search with keyword Cebu')
+def Given_I_search_with_keyword_free(step):
+	assert True
+
+@step('When I submit the search bar with the keyword \'(.*)\' for \'(.*)\'')
+def When_I_submit_the_search_bar_with_the_keyword_group1_for_group2(step, keyword, searchtype):
+	world.response = world.app.post('api/search', data = dict(keyword = keyword, searchtype = searchtype))
+
+@step(u'Then I should get a \'(.*)\' response')
+def then_i_should_get_a_group1_response_group2(step, expected_status_code):
+	assert_equals(world.response.status_code, int(expected_status_code))
+
+@step(u'And it will return these search details')
+def And_it_will_return_these_search_details(step):
+	assert_equals(step.hashes, json.loads(world.response.data)["entries"])
+
+@step(u'And it will return a status \'(.*)\'')
+def And_it_will_return_a_status_group1(step, status):
+	assert_equals(status, json.loads(world.response.data)["status"])
+
+#Scenario: Search location with keyword saasfaaf
+@step(u'Given I have no data with keyword saasfaaf')
+def Given_I_have_access_to_the_search_bar(step):
+    assert True
+    
+@step('When I submit the search bar with the keyword \'(.*)\' for \'(.*)\'')
+def When_I_submit_the_search_bar_with_the_keyword_group1_for_group2(step, keyword, searchtype):
+    world.response = world.app.post('/api/search', data = dict(keyword = keyword, searchtype = searchtype))
+    
+@step(u'Then I should get a \'(.*)\' response')
+def then_i_should_get_a_group1_response_group2(step, expected_status_code):
+    assert_equals(world.response.status_code, int(expected_status_code))
+
+@step(u'And it will return a status \'(.*)\'')
+def And_it_will_return_a_status_group1(step, status):
+    assert_equals(status, json.loads(world.response.data)["status"])
+
+#Scenario: Search restaurant with keyword Pancake
+@step(u'Given I search with keyword Pancake')
+def Given_I_search_with_keyword_free(step):
+	assert True
+
+@step('When I submit the search bar with the keyword \'(.*)\' for \'(.*)\'')
+def When_I_submit_the_search_bar_with_the_keyword_group1_for_group2(step, keyword, searchtype):
+	world.response = world.app.post('api/search', data = dict(keyword = keyword, searchtype = searchtype))
+
+@step(u'Then I should get a \'(.*)\' response')
+def then_i_should_get_a_group1_response_group2(step, expected_status_code):
+	assert_equals(world.response.status_code, int(expected_status_code))
+
+@step(u'And it will return these search details')
+def And_it_will_return_these_search_details(step):
+	assert_equals(step.hashes, json.loads(world.response.data)["entries"])
+
+@step(u'And it will return a status \'(.*)\'')
+def And_it_will_return_a_status_group1(step, status):
+	assert_equals(status, json.loads(world.response.data)["status"])
+
+#Scenario: Search restaurant with keyword saasfaaf
+@step(u'Given I have no data with keyword saasfaaf')
+def Given_I_have_access_to_the_search_bar(step):
+    assert True
+    
+@step('When I submit the search bar with the keyword \'(.*)\' for \'(.*)\'')
+def When_I_submit_the_search_bar_with_the_keyword_group1_for_group2(step, keyword, searchtype):
+    world.response = world.app.post('/api/search', data = dict(keyword = keyword, searchtype = searchtype))
+    
+@step(u'Then I should get a \'(.*)\' response')
+def then_i_should_get_a_group1_response_group2(step, expected_status_code):
+    assert_equals(world.response.status_code, int(expected_status_code))
+
+@step(u'And it will return a status \'(.*)\'')
+def And_it_will_return_a_status_group1(step, status):
+    assert_equals(status, json.loads(world.response.data)["status"])
+
+###################################################################################
+
