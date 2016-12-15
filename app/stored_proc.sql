@@ -27,6 +27,7 @@ create table "Catering"
 	is_active boolean default True
 );
 
+
 -- Create the Location table
 
 create table "Location"
@@ -35,6 +36,7 @@ create table "Location"
 	location_name text,
 	is_active boolean default True
 );
+
 
 -- Create the Restaurant table
 
@@ -66,7 +68,16 @@ create table "Food"
 
 -- ##### USER STORED PROCEDURES START HERE ##### --
 
--- (1) Add a new user (POST)
+-- (1) Retrieve all users (GET)
+create function list_users(out text, out text, out text, out text, out text, out text, out text, out boolean, out boolean, out boolean) returns setof record as
+$$
+	select email, first_name, middle_initial, last_name, password, contact_number, address, is_authenticated, is_active, is_anonymous
+	from "User";
+$$
+	language 'sql';
+
+	
+-- (2) Add a new user (POST)
 create function add_user(par_email text, par_firstname text, par_middlei text, par_lastname text, par_passw text, par_contactno text, par_address text) returns void as
 $body$
 	begin
@@ -76,7 +87,7 @@ $body$
 	language 'plpgsql';
 
 
--- (2) Retrieve a user (GET)
+-- (3) Retrieve a user (GET)
 create function get_user(in par_email text, out text, out text, out text, out text, out text, out text, out text, out boolean, out boolean, out boolean) returns setof record as
 $$
 	select email, first_name, middle_initial, last_name, password, contact_number, address, is_authenticated, is_active, is_anonymous
@@ -86,7 +97,7 @@ $$
 	language 'sql';
 
 
--- (3) Update a user (PUT)
+-- (4) Update a user (PUT)
 create function update_user(par_email text, par_firstname text, par_middlei text, par_lastname text, par_passw text, par_contactno text, par_address text) returns void as
 $$
 	update "User"
@@ -122,6 +133,41 @@ $$
 -- ##### CATERING STORED PROCEDURES END HERE ##### --
 
 
+-- ##### LOCATION STORED PROCEDURES START HERE ##### --
+
+-- (1) Retrieve all locations in the database (GET)
+create function list_locations(out int, out text) returns setof record as
+$$
+	select location_id, location_name
+	from "Location"
+	where is_active = True;
+$$
+	language 'sql';
+
+
+-- (2) Get the location which matches the location id parameter (GET)
+create function get_location(in par_location_id int, out int, out text) returns setof record as
+$$
+	select location_id, location_name
+	from "Location"
+	where is_active = True and location_id = par_location_id;
+$$
+	language 'sql';
+
+
+-- (3) Retrieve certain string (GET)
+create function get_location_starting_with(in par_keyword text, out int, out text, out boolean) returns setof record as
+$$
+	select location_id, location_name, is_active
+	from "Location"
+	where lower(location_name) Like par_keyword;
+$$
+	language 'sql';
+
+-- ##### LOCATION STORED PROCEDURES END HERE ##### --
+
+
+
 -- ##### RESTAURANT STORED PROCEDURES START HERE ##### --
 
 -- (1) Retrieve all restaurants in the database (GET)
@@ -143,21 +189,26 @@ $$
 $$
 	language 'sql';
 
--- ##### RESTAURANT STORED PROCEDURES END HERE ##### --
-
-
--- ##### LOCATION STORED PROCEDURES START HERE ##### --
-
--- (1) Retrieve all locations in the database (GET)
-create function list_locations(out int, out text, out boolean) returns setof record as
+-- (3) Retrieve restaurant by location (GET)
+create function get_restaurant_by_location(in par_location_id int, out int, out int, out text, out text) returns setof record as
 $$
-	select location_id, location_name, is_active
-	from "Location"
-	where is_active = True;
+	select restaurant_id, location_id, restaurant_name, restaurant_info
+	from "Restaurant" 
+	where is_active = True and location_id = par_location_id;
 $$
 	language 'sql';
 
--- ##### LOCATION STORED PROCEDURES END HERE ##### --
+--(4) Retrieve starting with a certain string(GET)
+create function get_restaurant_starting_with(in par_keyword text, out int, out int, out text, out text, out boolean) returns setof record as
+$$
+	select restaurant_id, location_id, restaurant_name, restaurant_info, is_active
+	from "Restaurant"
+	where lower(restaurant_name) Like par_keyword;
+$$
+	language 'sql';
+
+-- ##### RESTAURANT STORED PROCEDURES END HERE ##### --
+
 
 
 -- ##### FOOD STORED PROCEDURES START HERE ##### --
