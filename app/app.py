@@ -81,6 +81,34 @@ def register():
 	return jsonify({'status': 'ok', 'message': res[0][0]})
 
 ##################################################################
+
+
+################################## SEARCH ########################
+@app.route('/api/search', methods=['POST'])
+def search():
+
+	"""" Search a restaurant using keyword """
+	passedkeyword = request.form["keyword"].lower() + "%"
+	passed = [passedkeyword, 0]
+	recs = []
+	if request.form["keyword"] == "":
+			return jsonify({'status': 'no entries', 'count': 0})
+	if request.form["searchtype"] == "restaurant":
+		res = spcall('get_restaurant_starting_with', passed[:1], True)
+		for r in res:
+			recs.append({'restaurant_id': str(r[0]), 'location_id': r[1], 'restaurant_name': r[2], 'restaurant_info': r[3], 'is_active': str(r[4])})
+		if len(recs) == 0:
+			return jsonify({'status': 'no entries', 'count': len(recs)})
+		return jsonify({'status': 'ok', 'entries': recs, 'count': len(recs)})
+	else:
+		res = spcall('get_location_starting_with', passed[:1], True)
+		for r in res:
+			recs.append({'location_id': str(r[0]), 'location_name': r[1]})
+		if len(recs) == 0:
+			return jsonify({'status': 'no entries', 'count': len(recs)})
+		return jsonify({'status': 'ok', 'entries': recs, 'count': len(recs)})
+
+#######################################################
 	
 if __name__ == "__main__":
     app.run(debug=True, port=5005)
